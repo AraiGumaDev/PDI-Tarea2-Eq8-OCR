@@ -42,6 +42,10 @@ def extract_hog_features(images):
         features.append(hog_feat)
     return np.array(features)
 
+def extract_hog_features_training(image):
+    features = hog(image, orientations=9, pixels_per_cell=(8, 8),
+                   cells_per_block=(2, 2), block_norm='L2-Hys')
+    return features
 
 def extract_lbp_features(images):
     features = []
@@ -52,6 +56,15 @@ def extract_lbp_features(images):
         hist /= hist.sum() + 1e-7
         features.append(hist)
     return np.array(features)
+
+def extract_lbp_features_training(image, P=8, R=1):
+    lbp = local_binary_pattern(image, P, R, method='uniform')
+    (hist, _) = np.histogram(lbp.ravel(),
+                             bins=np.arange(0, P + 3),
+                             range=(0, P + 2))
+    hist = hist.astype("float")
+    hist /= (hist.sum() + 1e-6)
+    return hist
 
 
 def save_features(X, y, feature_type):

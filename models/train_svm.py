@@ -21,8 +21,8 @@ def train_svm(feature_file, output_name):
     print(f"✅ Precisión: {acc:.4f}")
 
     print("🔹 Guardando modelo...")
-    os.makedirs("models/saved_models", exist_ok=True)
-    joblib.dump((model, le), f"models/saved_models/{output_name}.pkl")
+    os.makedirs("models/saved_svm", exist_ok=True)
+    joblib.dump((model, le), f"models/saved_svm/{output_name}.pkl")
 
     print("🔹 Matriz de confusión:")
     print(confusion_matrix(y_test, y_pred))

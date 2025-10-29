@@ -44,8 +44,8 @@ class LicensePlateApp(ctk.CTk):
         self.selected_method = ctk.StringVar(value="HOG")
 
         # Cargar modelos
-        self.model_hog = self.load_model("models/saved_models/hog_svm.pkl")
-        self.model_lbp = self.load_model("models/saved_models/lbp_svm.pkl")
+        self.model_hog = self.load_model("models/saved_svm/hog_svm.pkl")
+        self.model_lbp = self.load_model("models/saved_svm/lbp_svm.pkl")
 
         # Crear la interfaz
         self.create_layout()

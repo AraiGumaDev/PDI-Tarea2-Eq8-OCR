@@ -17,4 +17,4 @@ def evaluate_model(feature_file, model_file):
 
 
 if __name__ == "__main__":
-    evaluate_model("features/hog_features.pkl", "models/saved_models/hog_svm.pkl")
+    evaluate_model("features/lbp_features.pkl", "models/saved_svm/lbp_svm.pkl")
