@@ -35,7 +35,7 @@ class RedirectText:
 class LicensePlateApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("Detector de Placas | HOG / LBP")
+        self.title("Detector de Placas | HOG / SIFT")
         self.geometry("1100x600")
         self.resizable(False, False)
 
@@ -45,7 +45,7 @@ class LicensePlateApp(ctk.CTk):
 
         # Cargar modelos
         self.model_hog = self.load_model("models/saved_svm/hog_svm.pkl")
-        self.model_lbp = self.load_model("models/saved_svm/lbp_svm.pkl")
+        self.model_lbp = self.load_model("models/saved_svm/sift_svm.pkl")
 
         # Crear la interfaz
         self.create_layout()
@@ -68,7 +68,7 @@ class LicensePlateApp(ctk.CTk):
         ctk.CTkButton(sidebar, text="Cargar imagen", command=self.load_image).pack(pady=10)
 
         ctk.CTkLabel(sidebar, text="Método de características:", font=("Arial", 14)).pack(pady=(20, 5))
-        ctk.CTkOptionMenu(sidebar, variable=self.selected_method, values=["HOG", "LBP"]).pack(pady=10)
+        ctk.CTkOptionMenu(sidebar, variable=self.selected_method, values=["HOG", "SIFT"]).pack(pady=10)
 
         ctk.CTkButton(sidebar, text="Detectar Placa", command=self.process_detection).pack(pady=20)
 
@@ -133,8 +133,8 @@ class LicensePlateApp(ctk.CTk):
             method = self.selected_method.get()
             if method == "HOG" and self.model_hog:
                 text = predict_characters("outputs/detected_plate.jpg", "HOG", char_paths)
-            elif method == "LBP" and self.model_lbp:
-                text = predict_characters("outputs/detected_plate.jpg", "LBP", char_paths)
+            elif method == "SIFT" and self.model_lbp:
+                text = predict_characters("outputs/detected_plate.jpg", "SIFT", char_paths)
             else:
                 print("[ERROR] Modelo no cargado.")
                 return
