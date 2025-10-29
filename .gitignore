@@ -1,4 +1,0 @@
-.venv
-outputs/characters
-.gitignore
-utils/test.py
