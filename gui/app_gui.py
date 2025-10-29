@@ -44,8 +44,8 @@ class LicensePlateApp(ctk.CTk):
         self.selected_method = ctk.StringVar(value="HOG")
 
         # Cargar modelos
-        self.model_hog = self.load_model("data/models/svm_hog_model.pkl")
-        self.model_lbp = self.load_model("data/models/svm_lbp_model.pkl")
+        self.model_hog = self.load_model("models/saved_models/hog_svm.pkl")
+        self.model_lbp = self.load_model("models/saved_models/lbp_svm.pkl")
 
         # Crear la interfaz
         self.create_layout()
@@ -126,15 +126,15 @@ class LicensePlateApp(ctk.CTk):
             self.display_image(detected_img)
 
             # Segmentar caracteres
-            segmented_path = segment_characters("outputs/detected_plate.jpg")
-            print(f"[INFO] Caracteres segmentados: {segmented_path}")
+            char_paths = segment_characters("outputs/detected_plate.jpg")
+            print(f"[INFO] Caracteres segmentados: {len(char_paths)}")
 
             # Predicción según modelo seleccionado
             method = self.selected_method.get()
             if method == "HOG" and self.model_hog:
-                text = predict_characters(segmented_path, self.model_hog, method="HOG")
+                text = predict_characters("outputs/detected_plate.jpg", "HOG", char_paths)
             elif method == "LBP" and self.model_lbp:
-                text = predict_characters(segmented_path, self.model_lbp, method="LBP")
+                text = predict_characters("outputs/detected_plate.jpg", "LBP", char_paths)
             else:
                 print("[ERROR] Modelo no cargado.")
                 return
