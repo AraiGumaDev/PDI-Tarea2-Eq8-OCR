@@ -1,0 +1,28 @@
+import cv2
+import os
+
+def detect_plate(image_path, save_path="outputs/detected_plate.jpg"):
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+    # Leer imagen y convertir a escala de grises
+    img = cv2.imread(image_path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Clasificador Haar preentrenado
+    cascade_path = cv2.data.haarcascades + "haarcascade_russian_plate_number.xml"
+    plate_cascade = cv2.CascadeClassifier(cascade_path)
+
+    plates = plate_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(25, 25))
+
+    if len(plates) == 0:
+        print("⚠️ No se detectó ninguna placa en la imagen.")
+        return None
+
+    x, y, w, h = plates[0]
+    plate_img = img[y:y+h, x:x+w]
+    cv2.imwrite(save_path, plate_img)
+    print(f"✅ Placa detectada y guardada en {save_path}")
+    return save_path
+
+if __name__ == "__main__":
+    detect_plate("../car.jpg")
