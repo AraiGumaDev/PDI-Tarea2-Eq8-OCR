@@ -1,19 +1,36 @@
+import shutil
+
 import cv2
 import os
 import numpy as np
 
+from utils.detect_plate import detect_plate
+
+
 def segment_characters(plate_path, output_dir="outputs/characters"):
     os.makedirs(output_dir, exist_ok=True)
 
+    for item in os.listdir(output_dir):
+        item_path = os.path.join(output_dir, item)
+        if os.path.isfile(item_path):
+            os.remove(item_path)
+        elif os.path.isdir(item_path):
+            shutil.rmtree(item_path)
+    print(f"Directory '{output_dir}' has been emptied.")
+
     # Leer la placa
     plate = cv2.imread(plate_path)
+    if plate is None:
+        print(f"Plate is not found in{plate_path}")
+        return
+
+    #Agregandole cualquier otro filtro se obtienen peores resultados
     gray = cv2.cvtColor(plate, cv2.COLOR_BGR2GRAY)
+    #gray = cv2.GaussianBlur(gray, (3, 3), 0)
+    #gray = cv2.bilateralFilter(gray, 11, 17, 17)
+    #gray = cv2.equalizeHist(gray)
+    #gray = cv2.filter2D(gray, -1, gray)
 
-    # 1️⃣ Reducción de ruido y mejora de contraste
-    gray = cv2.bilateralFilter(gray, 11, 17, 17)
-    gray = cv2.equalizeHist(gray)
-
-    # 2️⃣ Binarización adaptativa (mejor que Otsu para luz irregular)
     thresh = cv2.adaptiveThreshold(
         gray, 255,
         cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
@@ -21,11 +38,6 @@ def segment_characters(plate_path, output_dir="outputs/characters"):
         35, 15
     )
 
-    # 3️⃣ Operaciones morfológicas para limpiar
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
-    thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=1)
-
-    # 4️⃣ Buscar contornos
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     chars = []
@@ -41,9 +53,13 @@ def segment_characters(plate_path, output_dir="outputs/characters"):
             char_img = thresh[y:y+h, x:x+w]
             chars.append((x, char_img))
 
+    test_path = os.path.join(output_dir, "test.png")
+    cv2.imwrite(test_path, thresh)
+
     if not chars:
         print("⚠️ No se detectaron caracteres en la placa (ajusta parámetros).")
         return []
+
 
     # Ordenar de izquierda a derecha
     chars = sorted(chars, key=lambda c: c[0])
@@ -52,6 +68,7 @@ def segment_characters(plate_path, output_dir="outputs/characters"):
     for i, (_, char) in enumerate(chars):
         # Añadir padding para que todos los caracteres queden centrados
         char = cv2.copyMakeBorder(char, 5, 5, 5, 5, cv2.BORDER_CONSTANT, value=[0,0,0])
+        char = cv2.resize(char, (64, 64))
         char_path = os.path.join(output_dir, f"char_{i}.png")
         cv2.imwrite(char_path, char)
         saved_paths.append(char_path)
@@ -60,5 +77,5 @@ def segment_characters(plate_path, output_dir="outputs/characters"):
     return saved_paths
 
 if __name__ == "__main__":
-    segment_characters("outputs\detected_plate.jpg")
-
+    #segment_characters("M:\\Users\\mahyro\\Documents\\Universidad\\2025-2\\Procesamiento Digital de Imagenes\\Tarea 2\\matricula_ocr\\outputs\\detected_plate.jpg")
+    segment_characters("../outputs/detected_plate.jpg")

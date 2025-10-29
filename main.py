@@ -27,6 +27,6 @@ def predict_characters(plate_path):
 
 
 if __name__ == "__main__":
-    img_path = "data/test/car.jpg"
+    img_path = "data/test/testing/12.jpg"
     plate_path = detect_plate(img_path)
     predict_characters(plate_path)
