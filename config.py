@@ -1,3 +1,4 @@
+# config.py
 import os
 
 # Directorio base del proyecto

@@ -1,3 +1,4 @@
+#gui/app_gui.py
 import os
 import cv2
 import joblib
@@ -9,7 +10,7 @@ import sys
 from io import StringIO
 
 # Importar tus funciones
-from main import predict_characters
+from utils.predict_plate import predict_characters
 from utils.detect_plate import detect_plate
 from utils.segment_characters import segment_characters
 from customtkinter import CTkImage
