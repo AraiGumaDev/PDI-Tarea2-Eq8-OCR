@@ -12,7 +12,7 @@ def detect_plate(image_path, save_path="outputs/detected_plate.jpg"):
     cascade_path = cv2.data.haarcascades + "haarcascade_russian_plate_number.xml"
     plate_cascade = cv2.CascadeClassifier(cascade_path)
 
-    plates = plate_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(25, 25))
+    plates = plate_cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=3, minSize=(25, 25))
 
     if len(plates) == 0:
         print("⚠️ No se detectó ninguna placa en la imagen.")
@@ -25,4 +25,4 @@ def detect_plate(image_path, save_path="outputs/detected_plate.jpg"):
     return save_path
 
 if __name__ == "__main__":
-    detect_plate("../car.jpg")
+    detect_plate("data/test/car3.jpeg")

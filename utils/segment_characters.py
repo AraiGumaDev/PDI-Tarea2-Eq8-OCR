@@ -60,5 +60,5 @@ def segment_characters(plate_path, output_dir="outputs/characters"):
     return saved_paths
 
 if __name__ == "__main__":
-    segment_characters("M:\\Users\\mahyro\\Documents\\Universidad\\2025-2\\Procesamiento Digital de Imagenes\\Tarea 2\\matricula_ocr\\outputs\\detected_plate.jpg")
+    segment_characters("outputs\detected_plate.jpg")
 
