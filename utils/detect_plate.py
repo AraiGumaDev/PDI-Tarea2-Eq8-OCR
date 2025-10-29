@@ -18,11 +18,19 @@ def detect_plate(image_path, save_path="outputs/detected_plate.jpg"):
         print("⚠️ No se detectó ninguna placa en la imagen.")
         return None
 
+    img_box = img.copy()
+
+    for plate in plates:
+        (x, y, w, h) = plate
+        roi_gray = gray[y:y + h, x:x + w]
+        roi_color = img_box[y:y + h, x:x + w]
+        cv2.rectangle(img_box, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
     x, y, w, h = plates[0]
     plate_img = img[y:y+h, x:x+w]
     cv2.imwrite(save_path, plate_img)
     print(f"✅ Placa detectada y guardada en {save_path}")
-    return save_path
+    test_path = os.path.join("outputs/", "detected_plate_box.jpg")
+    cv2.imwrite(test_path, img_box)
+    return img
 
-if __name__ == "__main__":
-    detect_plate("data/test/car3.jpeg")
