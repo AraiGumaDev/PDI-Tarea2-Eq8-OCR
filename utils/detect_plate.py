@@ -16,7 +16,7 @@ def detect_plate(image_path, save_path="outputs/detected_plate.jpg"):
     plates = plate_cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=3, minSize=(25, 25))
 
     if len(plates) == 0:
-        print("⚠️ No se detectó ninguna placa en la imagen.")
+        print("No se detectó ninguna placa en la imagen.")
         return None
 
     img_box = img.copy()
@@ -30,7 +30,7 @@ def detect_plate(image_path, save_path="outputs/detected_plate.jpg"):
     x, y, w, h = plates[0]
     plate_img = img[y:y+h, x:x+w]
     cv2.imwrite(save_path, plate_img)
-    print(f"✅ Placa detectada y guardada en {save_path}")
+    print(f"Placa detectada y guardada en {save_path}")
     test_path = os.path.join("outputs/", "detected_plate_box.jpg")
     cv2.imwrite(test_path, img_box)
     return img
